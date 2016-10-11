@@ -168,12 +168,15 @@ class BinarySearchTreeTest < Minitest::Test
   end
 
   def test_it_loads_movies_from_a_well_formatted_file
-    assert_equal 99, @tree.load('movies.txt')
+    assert_equal 98, @tree.load('movies.txt')
   end
 
-  def test_it_does_not_add_movie_to_tree_when_score_exists
-    skip
-    # file open, add 2 good lines and 3 duplicate lines, show that there are only 2 movies in the tree, maybe blow away the tree first for this one...
+  def test_it_does_not_add_movie_to_tree_when_score_already_exists
+    @tree.insert(score: 75, title: 'French Dirty')
+    assert @tree.include?(75)
+    assert_equal 2, @tree.sort.length
+    assert_equal 97, @tree.load('movies.txt')
+    assert_equal 99, @tree.sort.length
   end
 
 end

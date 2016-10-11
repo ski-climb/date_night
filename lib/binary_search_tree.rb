@@ -4,13 +4,15 @@ class BinarySearchTree
   attr_accessor :anchor_node,
                 :current_node,
                 :max_depth,
-                :sorted_array
+                :sorted_array,
+                :count
 
   def initialize
     @anchor_node = nil
     @current_node = nil
     @max_depth = 0
     @sorted_array = []
+    @count = 0
   end
 
   def insert(score:, title:)
@@ -132,6 +134,7 @@ class BinarySearchTree
     if anchor_node.nil?
       []
     else
+      self.sorted_array = []
       sorted_array << anchor_node
       add_child_nodes_to_array(anchor_node, 0)
       sorted_array.compact!
