@@ -158,9 +158,15 @@ class BinarySearchTreeTest < Minitest::Test
     assert_equal sorted_array, @tree.sort
   end
 
-  def test_it_shows_an_error_message_when_no_file_is_present
-    skip
-    # and what about when no filename is given?
+  def test_it_shows_an_error_message_when_filename_given_but_no_file_exists
+    filename = 'asdf.txt'
+    bad_filename_error_message = "File not present.  Please check your filename, #{filename}."
+    assert_equal bad_filename_error_message, @tree.load(filename)
+  end
+
+  def test_it_errors_out_when_no_filename_is_given
+    no_filename_error_message = "No filename given.  Expecting a command of the form: `binarysearchtree.load('filename-here')`"
+    assert_equal no_filename_error_message, @tree.load('')
   end
 
   def test_it_loads_zero_movies_when_a_file_has_no_movies_in_it

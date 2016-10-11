@@ -172,14 +172,37 @@ class BinarySearchTree
   def load(filename)
     path_to_filename = '/Users/nick/turing/1module/projects/binary_search_tree/uploads/'
     file = "#{path_to_filename}#{filename}"
-    count = 0
-    File.readlines(file).each do |line|
-      score = line.scan(/\A(\d+)/).flatten.first.to_i
-      title = line.scan(/,(.*)/).flatten.first.strip
-      count += 1 if self.insert(score: score, title: title)
+    self.count = 0
+    begin
+      File.readlines(file).each do |line|
+        score = find_score(line)
+        title = find_title(line)
+        insert_new_movies(score, title)
+      end
+    rescue Errno::EISDIR
+      return "No filename given.  Expecting a command of the form: `binarysearchtree.load('filename-here')`"
+    rescue Errno::ENOENT
+      return "File not present.  Please check your filename, #{filename}."
+    else
+      count
     end
-    count
   end
+
+  def find_score(line)
+    line.scan(/\A(\d+)/).flatten.first.to_i
+  end
+
+  def find_title(line)
+    line.scan(/,(.*)/).flatten.first.strip
+  end
+
+  def insert_new_movies(score, title)
+    unless self.include?(score)
+      self.count += 1
+      self.insert(score: score, title: title)
+    end
+  end
+
 
   def health(depth)
     # should return an array (see assignment for this one)
