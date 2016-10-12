@@ -2,21 +2,19 @@ require_relative 'node'
 
 class BinarySearchTree
   attr_accessor :anchor_node,
-                :current_node,
                 :max_depth,
                 :sorted_array,
                 :number_of_movies_inserted,
-                :total_number_of_nodes,
+                :size_of_tree,
                 :nodes_at_depth
 
   def initialize
-    @anchor_node = nil
-    @current_node = nil
+    @anchor_node
     @max_depth = 0
-    @sorted_array = []
-    @number_of_movies_inserted = 0
-    @total_number_of_nodes = 0
-    @nodes_at_depth = []
+    @sorted_array
+    @number_of_movies_inserted
+    @size_of_tree
+    @nodes_at_depth
   end
 
   def insert(score:, title:)
@@ -195,24 +193,32 @@ class BinarySearchTree
     if anchor_node.nil?
       []
     else
-      self.total_number_of_nodes = sort.length
+      self.size_of_tree = count_child_nodes(anchor_node)
       self.nodes_at_depth = []
 
       nodes = find_by_depth(anchor_node, depth)
-      size_of_tree = count_child_nodes(anchor_node)
-      presentation = []
+      present_nodes = []
+      node_statistics(nodes, present_nodes)
 
-      nodes.each do |node|
-        size_of_branch = count_child_nodes(node)
-        presentation << [
-          node.score,
-          count_child_nodes(node),
-          ( 100 * size_of_branch / size_of_tree)
-        ]
-      end
+      return sort_statistics(present_nodes)
+    end
+  end
 
-      presentation
+  def node_statistics(nodes, present_nodes)
+    nodes.each do |node|
+      size_of_branch = count_child_nodes(node)
+      present_nodes << [
+        node.score,
+        count_child_nodes(node),
+        ( 100 * size_of_branch / size_of_tree )
+      ]
+    end
+    present_nodes
+  end
 
+  def sort_statistics(present_nodes)
+    present_nodes.sort_by! do |node_results|
+      node_results[1]
     end
   end
 

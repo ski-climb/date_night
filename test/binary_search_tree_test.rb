@@ -207,6 +207,17 @@ class BinarySearchTreeTest < Minitest::Test
   end
 
   def test_it_returns_the_health_of_a_tree_with_7_elements
+    @healthy_tree = BinarySearchTree.new
+    @healthy_tree.insert(score: 98, title: "Animals United")
+    @healthy_tree.insert(score: 58, title: "Armageddon")
+    @healthy_tree.insert(score: 36, title: "Bill & Ted's Bogus Journey")
+    @healthy_tree.insert(score: 93, title: "Bill & Ted's Excellent Adventure")
+    @healthy_tree.insert(score: 86, title: "Charlie's Angels")
+    @healthy_tree.insert(score: 38, title: "Charlie's Country")
+    @healthy_tree.insert(score: 69, title: "Collateral Damage")
+    assert_equal [[98, 7, 100]], @healthy_tree.health(0)
+    assert_equal [[58, 6, 85]], @healthy_tree.health(1)
+    assert_equal [[36, 2, 28], [93, 3, 42]], @healthy_tree.health(2)
   end
 
 end
