@@ -5,7 +5,9 @@ class BinarySearchTree
                 :current_node,
                 :max_depth,
                 :sorted_array,
-                :number_of_movies_inserted
+                :number_of_movies_inserted,
+                :total_number_of_nodes,
+                :nodes_at_depth
 
   def initialize
     @anchor_node = nil
@@ -13,6 +15,8 @@ class BinarySearchTree
     @max_depth = 0
     @sorted_array = []
     @number_of_movies_inserted = 0
+    @total_number_of_nodes = 0
+    @nodes_at_depth = []
   end
 
   def insert(score:, title:)
@@ -58,16 +62,16 @@ class BinarySearchTree
   end
 
   def include?(score)
-    node = find_node_by_score(anchor_node, score)
+    node = find_by_score(anchor_node, score)
     !! node
   end
 
   def depth_of(score)
-    node = find_node_by_score(anchor_node, score)
+    node = find_by_score(anchor_node, score)
     node.depth
   end
 
-  def find_node_by_score(node, score)
+  def find_by_score(node, score)
     compare_score = score <=> node.score
     
     case compare_score
@@ -75,13 +79,13 @@ class BinarySearchTree
       if node.right.nil?
         false
       else
-        find_node_by_score(node.right, score)
+        find_by_score(node.right, score)
       end
     when -1
       if node.left.nil?
         false
       else
-        find_node_by_score(node.left, score)
+        find_by_score(node.left, score)
       end
     when 0
       node
@@ -121,17 +125,16 @@ class BinarySearchTree
     else
       self.sorted_array = []
       sorted_array << anchor_node
-      add_child_nodes_to_array(anchor_node, 0)
+      add_child_nodes(anchor_node, 0)
       sorted_array.compact!
       sorted_array.map! do |node|
         node.as_hash
       end
-
       return sorted_array
     end
   end
 
-  def add_child_nodes_to_array(node, index)
+  def add_child_nodes(node, index)
     insert_nodes = [
       node.left,
       node,
@@ -140,10 +143,10 @@ class BinarySearchTree
     sorted_array[index] = insert_nodes
     compact_and_flatten
     if node.right
-      add_child_nodes_to_array(node.right, sorted_array.index(node.right))
+      add_child_nodes(node.right, sorted_array.index(node.right))
     end
     if node.left
-      add_child_nodes_to_array(node.left, sorted_array.index(node.left))
+      add_child_nodes(node.left, sorted_array.index(node.left))
     end
 
     return sorted_array
@@ -189,8 +192,46 @@ class BinarySearchTree
   end
 
   def health(depth)
+    if anchor_node.nil?
+      []
+    else
+      self.total_number_of_nodes = sort.length
+      self.nodes_at_depth = []
 
-    # return [[score, 1 + number_of_child_nodes, percent_under_this_node]]
+      nodes = find_by_depth(anchor_node, depth)
+      size_of_tree = count_child_nodes(anchor_node)
+      presentation = []
+
+      nodes.each do |node|
+        size_of_branch = count_child_nodes(node)
+        presentation << [
+          node.score,
+          count_child_nodes(node),
+          ( 100 * size_of_branch / size_of_tree)
+        ]
+      end
+
+      presentation
+
+    end
+  end
+
+  def find_by_depth(node, depth)
+    if node.depth < depth
+      find_by_depth(node.right, depth) if node.right
+      find_by_depth(node.left, depth) if node.left
+    elsif node.depth == depth
+      nodes_at_depth << node
+    end
+    nodes_at_depth
+  end
+
+  def count_child_nodes(node)
+    self.sorted_array = []
+    sorted_array << node
+    child_nodes = add_child_nodes(node, 0)
+    # binding.pry
+    child_nodes.compact.length
   end
 
 end

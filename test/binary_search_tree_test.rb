@@ -190,22 +190,23 @@ class BinarySearchTreeTest < Minitest::Test
   end
 
   def test_it_returns_the_health_of_a_tree_with_zero_movies
-    skip
-    # @blank_tree = BinarySearchTree.new
-    # assert_equal [], @blank_tree.health(0)
+    @blank_tree = BinarySearchTree.new
+    assert_equal [], @blank_tree.health(0)
   end
 
   def test_it_returns_the_health_of_a_tree_with_one_movie
-    skip
-    # assert_equal [[50, 1, 100]], @tree.health(0)
+    assert_equal [[50, 1, 100]], @tree.health(0)
   end
 
   def test_it_returns_the_health_of_a_tree_with_three_movies
-    skip
+    @tree.insert(score: 70, title: "Cat in the Hat")
+    @tree.insert(score: 30, title: "Modest Mouse")
+    # binding.pry
+    assert_equal [[50, 3, 100]], @tree.health(0)
+    assert_equal [[70, 1, 33], [30, 1, 33]], @tree.health(1)
   end
 
   def test_it_returns_the_health_of_a_tree_with_7_elements
-    skip
   end
 
 end
