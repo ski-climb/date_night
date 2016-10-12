@@ -238,4 +238,46 @@ class BinarySearchTreeTest < Minitest::Test
     assert_equal 3, @tall_tree.height
   end
 
+  def test_a_tree_with_no_movies_has_zero_leaves
+    @empty_tree = BinarySearchTree.new
+    assert_equal 0, @empty_tree.leaves
+  end
+
+  def test_a_tree_with_one_movie_has_one_leaf
+    skip
+    assert_equal 1, @tree.leaves
+  end
+
+  def test_a_tree_with_two_movies_has_two_leaves
+    skip
+    @tree.insert(score: 100, title: "Second node")
+    assert_equal 1, @tree.leaves
+  end
+
+  def test_a_tree_with_only_right_nodes_has_only_one_leaf
+    skip
+    @tree.insert(score: 60, title: "To the right only")
+    @tree.insert(score: 70, title: "To the right only")
+    @tree.insert(score: 80, title: "To the right only")
+    @tree.insert(score: 90, title: "To the right only")
+    assert_equal 1, @tree.leaves
+  end
+
+  def test_a_tree_with_one_node_on_either_side_of_the_anchor_has_two_leaves
+    skip
+    @tree.insert(score: 10, title: "To the Left")
+    @tree.insert(score: 100, title: "To the Right")
+    assert_equal 2, @tree.leaves
+  end
+
+  def test_a_tree_with_bunch_of_nodes_has_many_leaves
+    skip
+    @tall_tree = BinarySearchTree.new
+    @tall_tree.insert(score: 61, title: "Bill & Ted's Excellent Adventure")
+    @tall_tree.insert(score: 16, title: "Johnny English")
+    @tall_tree.insert(score: 92, title: "Sharknado 3")
+    @tall_tree.insert(score: 50, title: "Hannibal Buress: Animal Furnace")
+    assert_equal 2, @tall_tree.leaves
+  end
+
 end
