@@ -6,7 +6,8 @@ class BinarySearchTree
                 :sorted_array,
                 :number_of_movies_inserted,
                 :size_of_tree,
-                :nodes_at_depth
+                :nodes_at_depth,
+                :leaf_nodes
 
   def initialize
     @anchor_node
@@ -15,6 +16,7 @@ class BinarySearchTree
     @number_of_movies_inserted
     @size_of_tree
     @nodes_at_depth
+    @leaf_nodes
   end
 
   def height
@@ -244,8 +246,26 @@ class BinarySearchTree
     self.sorted_array = []
     sorted_array << node
     child_nodes = add_child_nodes(node, 0)
-    # binding.pry
     child_nodes.compact.length
+  end
+
+  def leaves
+    self.leaf_nodes = []
+    if anchor_node
+      all_the_leaves = find_leaves(anchor_node)
+      all_the_leaves.length
+    else
+      0
+    end
+  end
+
+  def find_leaves(node)
+    if node.left.nil? && node.right.nil?
+      leaf_nodes << node
+    else
+      find_leaves(node.left) if node.left
+      find_leaves(node.right) if node.right
+    end
   end
 
 end
