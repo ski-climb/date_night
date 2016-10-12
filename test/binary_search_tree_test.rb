@@ -1,4 +1,7 @@
+gem 'simplecov', :require => false, :group => :test
 gem 'minitest', '~> 5.9'
+require 'simplecov'
+SimpleCov.start
 require 'minitest/autorun'
 require 'minitest/pride'
 require_relative '../lib/node'
