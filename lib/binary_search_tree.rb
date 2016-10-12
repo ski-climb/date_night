@@ -11,7 +11,7 @@ class BinarySearchTree
 
   def initialize
     @anchor_node
-    @max_depth = 0
+    @max_depth
     @sorted_array
     @number_of_movies_inserted
     @size_of_tree
@@ -38,6 +38,7 @@ class BinarySearchTree
   end
 
   def make_anchor_node(score, title)
+    self.max_depth = 0
     self.anchor_node = Node.new(score: score, title: title, depth: 0)
   end
 
@@ -103,11 +104,13 @@ class BinarySearchTree
 
   def max
     max_node = find_max(anchor_node)
+    # max_node.as_hash
     hash = { max_node.title => max_node.score }
   end
 
   def min
     min_node = find_min(anchor_node)
+    # min_node.as_hash
     hash = { min_node.title => min_node.score }
   end
 
@@ -133,7 +136,7 @@ class BinarySearchTree
     else
       self.sorted_array = []
       sorted_array << anchor_node
-      add_child_nodes(anchor_node, 0)
+      collect_child_nodes(anchor_node, 0)
       sorted_array.compact!
       sorted_array.map! do |node|
         node.as_hash
@@ -142,7 +145,7 @@ class BinarySearchTree
     end
   end
 
-  def add_child_nodes(node, index)
+  def collect_child_nodes(node, index)
     insert_nodes = [
       node.left,
       node,
@@ -151,10 +154,10 @@ class BinarySearchTree
     sorted_array[index] = insert_nodes
     compact_and_flatten
     if node.right
-      add_child_nodes(node.right, sorted_array.index(node.right))
+      collect_child_nodes(node.right, sorted_array.index(node.right))
     end
     if node.left
-      add_child_nodes(node.left, sorted_array.index(node.left))
+      collect_child_nodes(node.left, sorted_array.index(node.left))
     end
 
     return sorted_array
@@ -245,7 +248,7 @@ class BinarySearchTree
   def count_child_nodes(node)
     self.sorted_array = []
     sorted_array << node
-    child_nodes = add_child_nodes(node, 0)
+    child_nodes = collect_child_nodes(node, 0)
     child_nodes.compact.length
   end
 
@@ -266,6 +269,58 @@ class BinarySearchTree
       find_leaves(node.left) if node.left
       find_leaves(node.right) if node.right
     end
+  end
+
+  def delete(score)
+    if score == anchor_node.score
+      nodes = save_the_children(anchor_node)
+      self.anchor_node = nil
+      sort_children(nodes) if nodes
+      return score
+    end
+    node = find_by_score(anchor_node, score)
+    if node
+      remove_child(anchor_node, node)
+      return score
+    end
+  end
+
+  def remove_child(parent_node, node)
+    if parent_node.right == node
+      nodes = save_the_children(node)
+      remove_right_child(parent_node)
+      sort_children(nodes) if nodes
+    elsif parent_node.left == node
+      nodes = save_the_children(node)
+      remove_left_child(parent_node)
+      sort_children(nodes) if nodes
+    else 
+      remove_child(parent_node.right, node) if parent_node.right
+      remove_child(parent_node.left, node) if parent_node.left
+    end
+  end
+
+  def save_the_children(node)
+    self.sorted_array = []
+    nodes = collect_child_nodes(node, 0)
+    nodes.compact!
+    nodes.reject! { |n| n.score == node.score }
+    return nodes
+  end
+
+  def sort_children(nodes)
+    nodes.shuffle!.shuffle!
+    nodes.each do |node|
+      self.insert(score: node.score, title: node.title)
+    end
+  end
+
+  def remove_right_child(node)
+    node.right = nil
+  end
+
+  def remove_left_child(node)
+    node.left = nil
   end
 
 end

@@ -275,46 +275,79 @@ class BinarySearchTreeTest < Minitest::Test
   end
 
   def test_deleting_a_node_which_does_not_exist_returns_nil
-    refute @tree.delete(1000)
+    assert_nil @tree.delete(1000)
+  end
+
+  def test_deleting_a_node_returns_the_score_for_the_deleted_node
+    @tree.insert(score: 100, title: "I'm a leaf!")
+    assert @tree.include?(100)
+    assert_equal 100, @tree.delete(100)
+    refute @tree.include?(100)
   end
 
   def test_deleting_a_leaf_removes_that_node_only
     @tree.insert(score: 100, title: "I'm a leaf!")
     assert @tree.include?(100)
-    @tree.delete(100)
+    assert_equal 100, @tree.delete(100)
     refute @tree.include?(100)
     assert @tree.include?(50)
   end
 
-  def test_deleting_a_node_with_one_leaf_resorts_that_leaf
-    skip
-    # @tree.insert(score: 70, title: "To the Right")
-    # @tree.insert(score: 90, title: "To the Right Right")
-    # assert @tree.include?(50)
-    # assert @tree.include?(70)
-    # assert @tree.include?(90)
-    # assert 3, @tree.height
-    # assert 0, @tree.depth_of(50)
-    # assert 1, @tree.depth_of(70)
-    # assert 2, @tree.depth_of(90)
-    # @tree.delete(70)
-    # assert @tree.include?(90)
-    # assert 2, @tree.height
-    # assert 1, @tree.depth(90)
+  def test_deleting_a_deeper_leaf_node_returns_the_score_of_the_deleted_leaf
+    @tree.insert(score: 70, title: "To the Right")
+    @tree.insert(score: 90, title: "To the Right Right")
+    @tree.insert(score: 110, title: "To the Right Right Right")
+    assert_equal 110, @tree.delete(110)
+    refute @tree.include?(110)
   end
 
-  def test_deleting_the_anchor_node_resorts_the_entire_tree
-    skip
-    # make a tree
-    # delete the anchor node
-    # make sure everything else is still on the tree
+  def test_deleting_a_node_with_one_child_leaf_sorts_that_child_into_the_tree
+    @tree.insert(score: 70, title: "To the Right")
+    @tree.insert(score: 90, title: "To the Right Right")
+    assert @tree.include?(50)
+    assert @tree.include?(70)
+    assert @tree.include?(90)
+    assert 3, @tree.height
+    assert 0, @tree.depth_of(50)
+    assert 1, @tree.depth_of(70)
+    assert 2, @tree.depth_of(90)
+    assert_equal 70, @tree.delete(70)
+    assert @tree.include?(90)
+    assert 2, @tree.height
+    assert 1, @tree.depth_of(90)
   end
 
   def test_deleting_a_node_in_a_larger_tree_repopulates_tree_with_children_of_deleted_node
-    skip
-    # make a very specific tree
-    # delete a near-anchor node
-    # make sure that the children of the deleted node are still prsent
+    @tree.insert(score: 98, title: "Animals United")
+    @tree.insert(score: 58, title: "Armageddon")
+    @tree.insert(score: 36, title: "Bill & Ted's Bogus Journey")
+    @tree.insert(score: 93, title: "Bill & Ted's Excellent Adventure")
+    @tree.insert(score: 86, title: "Charlie's Angels")
+    @tree.insert(score: 38, title: "Charlie's Country")
+    @tree.insert(score: 69, title: "Collateral Damage")
+    assert_equal 98, @tree.delete(98)
+    assert @tree.include?(58)
+    assert @tree.include?(93)
+    assert @tree.include?(86)
+    assert @tree.include?(69)
   end
 
+  def test_deleting_the_anchor_node_sorts_the_entire_tree_again
+    @tree.insert(score: 98, title: "Animals United")
+    @tree.insert(score: 58, title: "Armageddon")
+    @tree.insert(score: 36, title: "Bill & Ted's Bogus Journey")
+    @tree.insert(score: 93, title: "Bill & Ted's Excellent Adventure")
+    @tree.insert(score: 86, title: "Charlie's Angels")
+    @tree.insert(score: 38, title: "Charlie's Country")
+    @tree.insert(score: 69, title: "Collateral Damage")
+    assert_equal 50, @tree.delete(50)
+    refute @tree.include?(50)
+    assert @tree.include?(98)
+    assert @tree.include?(58)
+    assert @tree.include?(36)
+    assert @tree.include?(93)
+    assert @tree.include?(86)
+    assert @tree.include?(38)
+    assert @tree.include?(69)
+  end
 end
