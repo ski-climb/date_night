@@ -5,14 +5,14 @@ class BinarySearchTree
                 :current_node,
                 :max_depth,
                 :sorted_array,
-                :count
+                :number_of_movies_inserted
 
   def initialize
     @anchor_node = nil
     @current_node = nil
     @max_depth = 0
     @sorted_array = []
-    @count = 0
+    @number_of_movies_inserted = 0
   end
 
   def insert(score:, title:)
@@ -23,6 +23,10 @@ class BinarySearchTree
 
     new_node = plinko_node_into_place(anchor_node, score, title)
     new_node.depth
+  end
+
+  def make_anchor_node(score, title)
+    self.anchor_node = Node.new(score: score, title: title, depth: 0)
   end
 
   def plinko_node_into_place(node, score, title)
@@ -44,10 +48,6 @@ class BinarySearchTree
     when 0
       node
     end
-  end
-
-  def make_anchor_node(score, title)
-    self.anchor_node = Node.new(score: score, title: title, depth: 0)
   end
 
   def make_new_node(score, title, depth)
@@ -132,17 +132,17 @@ class BinarySearchTree
   end
 
   def add_child_nodes_to_array(node, index)
-    inserted_nodes = [
+    insert_nodes = [
       node.left,
       node,
       node.right
     ]
-    sorted_array[index] = inserted_nodes
+    sorted_array[index] = insert_nodes
     compact_and_flatten
-    unless node.right.nil?
+    if node.right
       add_child_nodes_to_array(node.right, sorted_array.index(node.right))
     end
-    unless node.left.nil?
+    if node.left
       add_child_nodes_to_array(node.left, sorted_array.index(node.left))
     end
 
@@ -155,9 +155,9 @@ class BinarySearchTree
   end
 
   def load(filename)
-    path_to_filename = '/Users/nick/turing/1module/projects/binary_search_tree/uploads/'
-    file = "#{path_to_filename}#{filename}"
-    self.count = 0
+    path_to_file= '/Users/nick/turing/1module/projects/binary_search_tree/uploads/'
+    file = "#{path_to_file}#{filename}"
+    self.number_of_movies_inserted = 0
     begin
       File.readlines(file).each do |line|
         score = find_score(line)
@@ -165,11 +165,11 @@ class BinarySearchTree
         insert_new_movies(score, title)
       end
     rescue Errno::EISDIR
-      return "No filename given.  Expecting a command of the form: `binarysearchtree.load('filename-here')`"
+      return "No filename given.  Expecting a command of the form: `binary_search_tree.load('filename-here')`"
     rescue Errno::ENOENT
       return "File not present.  Please check your filename, #{filename}."
     else
-      count
+      number_of_movies_inserted
     end
   end
 
@@ -183,11 +183,10 @@ class BinarySearchTree
 
   def insert_new_movies(score, title)
     unless self.include?(score)
-      self.count += 1
+      self.number_of_movies_inserted += 1
       self.insert(score: score, title: title)
     end
   end
-
 
   def health(depth)
 

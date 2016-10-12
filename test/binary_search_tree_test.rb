@@ -169,7 +169,7 @@ class BinarySearchTreeTest < Minitest::Test
   end
 
   def test_it_shows_an_error_message_when_filename_is_blank
-    no_filename_error_message = "No filename given.  Expecting a command of the form: `binarysearchtree.load('filename-here')`"
+    no_filename_error_message = "No filename given.  Expecting a command of the form: `binary_search_tree.load('filename-here')`"
     assert_equal no_filename_error_message, @tree.load('')
   end
 
