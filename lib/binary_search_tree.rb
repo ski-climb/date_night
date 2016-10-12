@@ -60,24 +60,11 @@ class BinarySearchTree
   end
 
   def include?(score)
-    if score > anchor_node.score
-      if anchor_node.right
-        !! find_node(anchor_node.right, score)
-      else
-        false
-      end
-    elsif score < anchor_node.score
-      if anchor_node.left
-        !! find_node(anchor_node.left, score)
-      else
-        false
-      end
-    else
-      true
-    end
+    node = find_node_by_score(anchor_node, score)
+    !! node
   end
 
-  def find_node(node, score)
+  def find_node_by_score(node, score)
     compare_score = score <=> node.score
     
     case compare_score
@@ -85,13 +72,13 @@ class BinarySearchTree
       if node.right.nil?
         false
       else
-        find_node(node.right, score)
+        find_node_by_score(node.right, score)
       end
     when -1
       if node.left.nil?
         false
       else
-        find_node(node.left, score)
+        find_node_by_score(node.left, score)
       end
     when 0
       node
@@ -99,7 +86,7 @@ class BinarySearchTree
   end
 
   def depth_of(score)
-    node = find_node(anchor_node, score)
+    node = find_node_by_score(anchor_node, score)
     node.depth
     # include?, insert, and depth_of should all share the common 'find' method
   end
@@ -205,7 +192,8 @@ class BinarySearchTree
 
 
   def health(depth)
-    # should return an array (see assignment for this one)
+
+    # return [[score, 1 + number_of_child_nodes, percent_under_this_node]]
   end
 
 end

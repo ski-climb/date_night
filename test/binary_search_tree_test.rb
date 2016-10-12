@@ -1,7 +1,4 @@
-gem 'simplecov', :require => false, :group => :test
 gem 'minitest', '~> 5.9'
-require 'simplecov'
-SimpleCov.start
 require 'minitest/autorun'
 require 'minitest/pride'
 require_relative '../lib/node'
@@ -190,6 +187,25 @@ class BinarySearchTreeTest < Minitest::Test
     assert_equal 2, @tree.sort.length
     assert_equal 97, @tree.load('movies.txt')
     assert_equal 99, @tree.sort.length
+  end
+
+  def test_it_returns_the_health_of_a_tree_with_zero_movies
+    skip
+    # @blank_tree = BinarySearchTree.new
+    # assert_equal [], @blank_tree.health(0)
+  end
+
+  def test_it_returns_the_health_of_a_tree_with_one_movie
+    skip
+    # assert_equal [[50, 1, 100]], @tree.health(0)
+  end
+
+  def test_it_returns_the_health_of_a_tree_with_three_movies
+    skip
+  end
+
+  def test_it_returns_the_health_of_a_tree_with_7_elements
+    skip
   end
 
 end
