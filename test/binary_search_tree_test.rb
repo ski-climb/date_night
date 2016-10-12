@@ -220,4 +220,25 @@ class BinarySearchTreeTest < Minitest::Test
     assert_equal [[36, 2, 28], [93, 3, 42]], @healthy_tree.health(2)
   end
 
+  def test_an_empty_tree_returns_a_height_of_zero
+    @empty_tree = BinarySearchTree.new
+    assert_equal 0, @empty_tree.height
+  end
+
+  def test_a_tree_with_only_an_anchor_node_returns_a_height_of_one
+    assert_equal 1, @tree.height
+  end
+
+  def test_a_tree_knows_its_height
+    @tall_tree = BinarySearchTree.new
+    @tall_tree.insert(score: 98, title: "Animals United")
+    @tall_tree.insert(score: 58, title: "Armageddon")
+    @tall_tree.insert(score: 36, title: "Bill & Ted's Bogus Journey")
+    @tall_tree.insert(score: 93, title: "Bill & Ted's Excellent Adventure")
+    @tall_tree.insert(score: 86, title: "Charlie's Angels")
+    @tall_tree.insert(score: 38, title: "Charlie's Country")
+    @tall_tree.insert(score: 69, title: "Collateral Damage")
+    assert_equal 3, @tall_tree.height
+  end
+
 end
