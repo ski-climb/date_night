@@ -274,4 +274,47 @@ class BinarySearchTreeTest < Minitest::Test
     assert_equal 2, @tall_tree.leaves
   end
 
+  def test_deleting_a_node_which_does_not_exist_returns_nil
+    refute @tree.delete(1000)
+  end
+
+  def test_deleting_a_leaf_removes_that_node_only
+    @tree.insert(score: 100, title: "I'm a leaf!")
+    assert @tree.include?(100)
+    @tree.delete(100)
+    refute @tree.include?(100)
+    assert @tree.include?(50)
+  end
+
+  def test_deleting_a_node_with_one_leaf_resorts_that_leaf
+    skip
+    # @tree.insert(score: 70, title: "To the Right")
+    # @tree.insert(score: 90, title: "To the Right Right")
+    # assert @tree.include?(50)
+    # assert @tree.include?(70)
+    # assert @tree.include?(90)
+    # assert 3, @tree.height
+    # assert 0, @tree.depth_of(50)
+    # assert 1, @tree.depth_of(70)
+    # assert 2, @tree.depth_of(90)
+    # @tree.delete(70)
+    # assert @tree.include?(90)
+    # assert 2, @tree.height
+    # assert 1, @tree.depth(90)
+  end
+
+  def test_deleting_the_anchor_node_resorts_the_entire_tree
+    skip
+    # make a tree
+    # delete the anchor node
+    # make sure everything else is still on the tree
+  end
+
+  def test_deleting_a_node_in_a_larger_tree_repopulates_tree_with_children_of_deleted_node
+    skip
+    # make a very specific tree
+    # delete a near-anchor node
+    # make sure that the children of the deleted node are still prsent
+  end
+
 end
