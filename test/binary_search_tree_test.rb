@@ -231,13 +231,10 @@ class BinarySearchTreeTest < Minitest::Test
 
   def test_a_tree_knows_its_height
     @tall_tree = BinarySearchTree.new
-    @tall_tree.insert(score: 98, title: "Animals United")
-    @tall_tree.insert(score: 58, title: "Armageddon")
-    @tall_tree.insert(score: 36, title: "Bill & Ted's Bogus Journey")
-    @tall_tree.insert(score: 93, title: "Bill & Ted's Excellent Adventure")
-    @tall_tree.insert(score: 86, title: "Charlie's Angels")
-    @tall_tree.insert(score: 38, title: "Charlie's Country")
-    @tall_tree.insert(score: 69, title: "Collateral Damage")
+    @tall_tree.insert(score: 61, title: "Bill & Ted's Excellent Adventure")
+    @tall_tree.insert(score: 16, title: "Johnny English")
+    @tall_tree.insert(score: 92, title: "Sharknado 3")
+    @tall_tree.insert(score: 50, title: "Hannibal Buress: Animal Furnace")
     assert_equal 3, @tall_tree.height
   end
 

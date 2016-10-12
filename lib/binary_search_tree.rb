@@ -17,6 +17,14 @@ class BinarySearchTree
     @nodes_at_depth
   end
 
+  def height
+    if anchor_node
+      max_depth + 1
+    else
+      0
+    end
+  end
+
   def insert(score:, title:)
     if anchor_node.nil?
       make_anchor_node(score, title)
