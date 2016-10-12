@@ -16,18 +16,16 @@ class BinarySearchTree
   end
 
   def insert(score:, title:)
-
-    unless anchor_node
+    if anchor_node.nil?
       make_anchor_node(score, title)
       return anchor_node.depth
     end
 
-    new_node = compare_to_node(anchor_node, score, title)
-
+    new_node = plinko_node_into_place(anchor_node, score, title)
     new_node.depth
   end
 
-  def compare_to_node(node, score, title)
+  def plinko_node_into_place(node, score, title)
     compare_scores = score <=> node.score
 
     case compare_scores
@@ -35,13 +33,13 @@ class BinarySearchTree
       if node.right.nil?
         node.right = make_new_node(score, title, node.depth + 1)
       else
-        compare_to_node(node.right, score, title)
+        plinko_node_into_place(node.right, score, title)
       end
     when -1
       if node.left.nil?
         node.left = make_new_node(score, title, node.depth + 1)
       else
-        compare_to_node(node.left, score, title)
+        plinko_node_into_place(node.left, score, title)
       end
     when 0
       node
@@ -62,6 +60,11 @@ class BinarySearchTree
   def include?(score)
     node = find_node_by_score(anchor_node, score)
     !! node
+  end
+
+  def depth_of(score)
+    node = find_node_by_score(anchor_node, score)
+    node.depth
   end
 
   def find_node_by_score(node, score)
@@ -85,11 +88,6 @@ class BinarySearchTree
     end
   end
 
-  def depth_of(score)
-    node = find_node_by_score(anchor_node, score)
-    node.depth
-    # include?, insert, and depth_of should all share the common 'find' method
-  end
 
   def max
     max_node = find_max(anchor_node)
