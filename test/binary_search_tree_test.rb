@@ -51,11 +51,55 @@ class BinarySearchTreeTest < Minitest::Test
   end
 
   def test_it_passes_given_example_for_insert
-    insert_tree = BinarySearchTree.new
-    assert_equal 0, insert_tree.insert(61, "Bill & Ted's Excellent Adventure")
-    assert_equal 1, insert_tree.insert(16, "Johnny English")
-    assert_equal 1, insert_tree.insert(92, "Sharknado 3")
-    assert_equal 2, insert_tree.insert(50, "Hannibal Buress: Animal Furnace")
+    given_tree = BinarySearchTree.new
+    assert_equal 0, given_tree.insert(61, "Bill & Ted's Excellent Adventure")
+    assert_equal 1, given_tree.insert(16, "Johnny English")
+    assert_equal 1, given_tree.insert(92, "Sharknado 3")
+    assert_equal 2, given_tree.insert(50, "Hannibal Buress: Animal Furnace")
+  end
+
+  def test_it_passes_given_example_for_include?
+    given_tree = BinarySearchTree.new
+    assert_equal 0, given_tree.insert(61, "Bill & Ted's Excellent Adventure")
+    assert_equal 1, given_tree.insert(16, "Johnny English")
+    assert_equal 1, given_tree.insert(92, "Sharknado 3")
+    assert_equal 2, given_tree.insert(50, "Hannibal Buress: Animal Furnace")
+    assert given_tree.include?(16)
+    refute given_tree.include?(72)
+  end
+
+  def test_it_passes_given_example_for_depth_of
+    given_tree = BinarySearchTree.new
+    assert_equal 0, given_tree.insert(61, "Bill & Ted's Excellent Adventure")
+    assert_equal 1, given_tree.insert(16, "Johnny English")
+    assert_equal 1, given_tree.insert(92, "Sharknado 3")
+    assert_equal 2, given_tree.insert(50, "Hannibal Buress: Animal Furnace")
+    assert_equal 1, given_tree.depth_of(92)
+    assert_equal 2, given_tree.depth_of(50)
+  end
+
+  def test_it_passes_given_example_for_max_and_min
+    given_tree = BinarySearchTree.new
+    assert_equal 0, given_tree.insert(61, "Bill & Ted's Excellent Adventure")
+    assert_equal 1, given_tree.insert(16, "Johnny English")
+    assert_equal 1, given_tree.insert(92, "Sharknado 3")
+    assert_equal 2, given_tree.insert(50, "Hannibal Buress: Animal Furnace")
+    assert_equal({ "Sharknado 3" => 92 }, given_tree.max)
+    assert_equal({ "Johnny English" => 16 }, given_tree.min)
+  end
+
+  def test_it_passes_given_example_for_sort
+    given_tree = BinarySearchTree.new
+    assert_equal 0, given_tree.insert(61, "Bill & Ted's Excellent Adventure")
+    assert_equal 1, given_tree.insert(16, "Johnny English")
+    assert_equal 1, given_tree.insert(92, "Sharknado 3")
+    assert_equal 2, given_tree.insert(50, "Hannibal Buress: Animal Furnace")
+    assert_equal [
+      {"Johnny English"=>16},
+      {"Hannibal Buress: Animal Furnace"=>50},
+      {"Bill & Ted's Excellent Adventure"=>61},
+      {"Sharknado 3"=>92}
+    ], given_tree.sort
   end
 
   def test_it_does_not_insert_new_nodes_for_scores_which_alredy_exist
@@ -213,7 +257,7 @@ class BinarySearchTreeTest < Minitest::Test
     assert_equal [[70, 1, 33], [30, 1, 33]], @tree.health(1)
   end
 
-  def test_it_returns_the_health_of_a_tree_with_7_elements
+  def test_it_passes_given_example_for_health
     healthy_tree = BinarySearchTree.new
     healthy_tree.insert(98, "Animals United")
     healthy_tree.insert(58, "Armageddon")
@@ -236,13 +280,22 @@ class BinarySearchTreeTest < Minitest::Test
     assert_equal 1, @tree.height
   end
 
-  def test_a_tree_knows_its_height
+  def test_it_passes_given_example_for_height
     tall_tree = BinarySearchTree.new
     tall_tree.insert(61, "Bill & Ted's Excellent Adventure")
     tall_tree.insert(16, "Johnny English")
     tall_tree.insert(92, "Sharknado 3")
     tall_tree.insert(50, "Hannibal Buress: Animal Furnace")
     assert_equal 3, tall_tree.height
+  end
+
+  def test_it_can_have_deep_trees
+    high_movie_scores = (51..151).to_a
+    high_movie_scores.each do |score|
+      @tree.insert(score, "Fast and Furious #{score}")
+    end
+    assert_equal 102, @tree.height
+    assert_equal({ "Fast and Furious 151" => 151 }, @tree.max)
   end
 
   def test_a_tree_with_no_movies_has_zero_leaves
@@ -273,7 +326,7 @@ class BinarySearchTreeTest < Minitest::Test
     assert_equal 2, @tree.leaves
   end
 
-  def test_a_tree_with_bunch_of_nodes_has_many_leaves
+  def test_it_passes_given_example_for_counting_leaves
     tall_tree = BinarySearchTree.new
     tall_tree.insert(61, "Bill & Ted's Excellent Adventure")
     tall_tree.insert(16, "Johnny English")
@@ -282,7 +335,7 @@ class BinarySearchTreeTest < Minitest::Test
     assert_equal 2, tall_tree.leaves
   end
 
-  def test_deleting_a_node_which_does_not_exist_returns_nil
+  def test_attempting_to_delete_a_node_which_is_not_in_the_tree_returns_nil
     assert_nil @tree.delete(1000)
   end
 
@@ -333,6 +386,8 @@ class BinarySearchTreeTest < Minitest::Test
     @tree.insert(86, "Charlie's Angels")
     @tree.insert(38, "Charlie's Country")
     @tree.insert(69, "Collateral Damage")
+    assert_equal 50, @tree.anchor_node.score
+    refute_equal 98, @tree.anchor_node.score
     assert_equal 98, @tree.delete(98)
     assert @tree.include?(58)
     assert @tree.include?(93)
@@ -346,8 +401,8 @@ class BinarySearchTreeTest < Minitest::Test
     @tree.insert(36, "Bill & Ted's Bogus Journey")
     @tree.insert(93, "Bill & Ted's Excellent Adventure")
     @tree.insert(86, "Charlie's Angels")
-    @tree.insert(38, "Charlie's Country")
     @tree.insert(69, "Collateral Damage")
+    assert_equal 50, @tree.anchor_node.score
     assert_equal 50, @tree.delete(50)
     refute @tree.include?(50)
     assert @tree.include?(98)
@@ -355,7 +410,6 @@ class BinarySearchTreeTest < Minitest::Test
     assert @tree.include?(36)
     assert @tree.include?(93)
     assert @tree.include?(86)
-    assert @tree.include?(38)
     assert @tree.include?(69)
   end
 end
