@@ -10,13 +10,13 @@ class BinarySearchTreeTest < Minitest::Test
 
   def setup
     @tree = BinarySearchTree.new
-    refute @tree.anchor_node
     @tree.insert(50, "Anchor")
   end
 
   def test_anchor_node_is_the_first_entry
     assert @tree.anchor_node
     assert_equal 0, @tree.anchor_node.depth
+    assert_equal 1, @tree.height
     assert_equal 50, @tree.anchor_node.score
     assert_equal "Anchor", @tree.anchor_node.title
   end
@@ -48,6 +48,14 @@ class BinarySearchTreeTest < Minitest::Test
     assert_equal "To the Left", @tree.anchor_node.left.title
     assert_equal "To the Left Left", @tree.anchor_node.left.left.title
     assert_equal 2, @tree.anchor_node.left.left.depth
+  end
+
+  def test_it_passes_given_example_for_insert
+    insert_tree = BinarySearchTree.new
+    assert_equal 0, insert_tree.insert(61, "Bill & Ted's Excellent Adventure")
+    assert_equal 1, insert_tree.insert(16, "Johnny English")
+    assert_equal 1, insert_tree.insert(92, "Sharknado 3")
+    assert_equal 2, insert_tree.insert(50, "Hannibal Buress: Animal Furnace")
   end
 
   def test_it_does_not_insert_new_nodes_for_scores_which_alredy_exist
@@ -122,9 +130,9 @@ class BinarySearchTreeTest < Minitest::Test
   end
 
   def test_it_returns_an_empty_array_when_sorting_an_empty_tree
-    @tree = BinarySearchTree.new
-    assert @tree
-    assert_equal [], @tree.sort
+    empty_tree = BinarySearchTree.new
+    assert empty_tree
+    assert_equal [], empty_tree.sort
   end
 
   def test_it_sorts_a_tree_with_one_element
@@ -190,8 +198,8 @@ class BinarySearchTreeTest < Minitest::Test
   end
 
   def test_it_returns_the_health_of_a_tree_with_zero_movies
-    @blank_tree = BinarySearchTree.new
-    assert_equal [], @blank_tree.health(0)
+    blank_tree = BinarySearchTree.new
+    assert_equal [], blank_tree.health(0)
   end
 
   def test_it_returns_the_health_of_a_tree_with_one_movie
@@ -206,22 +214,22 @@ class BinarySearchTreeTest < Minitest::Test
   end
 
   def test_it_returns_the_health_of_a_tree_with_7_elements
-    @healthy_tree = BinarySearchTree.new
-    @healthy_tree.insert(98, "Animals United")
-    @healthy_tree.insert(58, "Armageddon")
-    @healthy_tree.insert(36, "Bill & Ted's Bogus Journey")
-    @healthy_tree.insert(93, "Bill & Ted's Excellent Adventure")
-    @healthy_tree.insert(86, "Charlie's Angels")
-    @healthy_tree.insert(38, "Charlie's Country")
-    @healthy_tree.insert(69, "Collateral Damage")
-    assert_equal [[98, 7, 100]], @healthy_tree.health(0)
-    assert_equal [[58, 6, 85]], @healthy_tree.health(1)
-    assert_equal [[36, 2, 28], [93, 3, 42]], @healthy_tree.health(2)
+    healthy_tree = BinarySearchTree.new
+    healthy_tree.insert(98, "Animals United")
+    healthy_tree.insert(58, "Armageddon")
+    healthy_tree.insert(36, "Bill & Ted's Bogus Journey")
+    healthy_tree.insert(93, "Bill & Ted's Excellent Adventure")
+    healthy_tree.insert(86, "Charlie's Angels")
+    healthy_tree.insert(38, "Charlie's Country")
+    healthy_tree.insert(69, "Collateral Damage")
+    assert_equal [[98, 7, 100]], healthy_tree.health(0)
+    assert_equal [[58, 6, 85]], healthy_tree.health(1)
+    assert_equal [[36, 2, 28], [93, 3, 42]], healthy_tree.health(2)
   end
 
   def test_an_empty_tree_returns_a_height_of_zero
-    @empty_tree = BinarySearchTree.new
-    assert_equal 0, @empty_tree.height
+    empty_tree = BinarySearchTree.new
+    assert_equal 0, empty_tree.height
   end
 
   def test_a_tree_with_only_an_anchor_node_returns_a_height_of_one
@@ -229,17 +237,17 @@ class BinarySearchTreeTest < Minitest::Test
   end
 
   def test_a_tree_knows_its_height
-    @tall_tree = BinarySearchTree.new
-    @tall_tree.insert(61, "Bill & Ted's Excellent Adventure")
-    @tall_tree.insert(16, "Johnny English")
-    @tall_tree.insert(92, "Sharknado 3")
-    @tall_tree.insert(50, "Hannibal Buress: Animal Furnace")
-    assert_equal 3, @tall_tree.height
+    tall_tree = BinarySearchTree.new
+    tall_tree.insert(61, "Bill & Ted's Excellent Adventure")
+    tall_tree.insert(16, "Johnny English")
+    tall_tree.insert(92, "Sharknado 3")
+    tall_tree.insert(50, "Hannibal Buress: Animal Furnace")
+    assert_equal 3, tall_tree.height
   end
 
   def test_a_tree_with_no_movies_has_zero_leaves
-    @empty_tree = BinarySearchTree.new
-    assert_equal 0, @empty_tree.leaves
+    empty_tree = BinarySearchTree.new
+    assert_equal 0, empty_tree.leaves
   end
 
   def test_a_tree_with_one_movie_has_one_leaf
@@ -266,12 +274,12 @@ class BinarySearchTreeTest < Minitest::Test
   end
 
   def test_a_tree_with_bunch_of_nodes_has_many_leaves
-    @tall_tree = BinarySearchTree.new
-    @tall_tree.insert(61, "Bill & Ted's Excellent Adventure")
-    @tall_tree.insert(16, "Johnny English")
-    @tall_tree.insert(92, "Sharknado 3")
-    @tall_tree.insert(50, "Hannibal Buress: Animal Furnace")
-    assert_equal 2, @tall_tree.leaves
+    tall_tree = BinarySearchTree.new
+    tall_tree.insert(61, "Bill & Ted's Excellent Adventure")
+    tall_tree.insert(16, "Johnny English")
+    tall_tree.insert(92, "Sharknado 3")
+    tall_tree.insert(50, "Hannibal Buress: Animal Furnace")
+    assert_equal 2, tall_tree.leaves
   end
 
   def test_deleting_a_node_which_does_not_exist_returns_nil
