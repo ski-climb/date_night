@@ -44,21 +44,30 @@ class BinarySearchTree
 
     case compare_scores
     when 1 
-      if node.right.nil?
-        node.right = make_new_node(score, title, node.depth + 1)
-      else
-        plinko_node_into_place(node.right, score, title)
-      end
+      insert_right(node, score, title)
     when -1
-      if node.left.nil?
-        node.left = make_new_node(score, title, node.depth + 1)
-      else
-        plinko_node_into_place(node.left, score, title)
-      end
+      insert_left(node, score, title)
     when 0
       node
     end
   end
+
+  def insert_right(node, score, title)
+    if node.right.nil?
+      node.right = make_new_node(score, title, node.depth + 1)
+    else
+      plinko_node_into_place(node.right, score, title)
+    end
+  end
+
+  def insert_left(node, score, title)
+    if node.left.nil?
+      node.left = make_new_node(score, title, node.depth + 1)
+    else
+      plinko_node_into_place(node.left, score, title)
+    end
+  end
+
 
   def make_new_node(score, title, depth)
     update_max_depth(depth) if depth > max_depth
