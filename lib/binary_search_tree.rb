@@ -20,11 +20,8 @@ class BinarySearchTree
   end
 
   def height
-    if anchor_node
-      max_depth + 1
-    else
-      0
-    end
+    return max_depth + 1 unless anchor_node.nil?
+    0
   end
 
   def insert(score, title)
@@ -71,47 +68,36 @@ class BinarySearchTree
   end
 
   def include?(score)
-    node = find_by_score(anchor_node, score)
+    node = find_by_score(score)
     !! node
   end
 
   def depth_of(score)
-    node = find_by_score(anchor_node, score)
+    node = find_by_score(score)
     node.depth
   end
 
-  def find_by_score(node, score)
+  def find_by_score(score, node=anchor_node)
     compare_score = score <=> node.score
     
     case compare_score
     when 1
-      if node.right.nil?
-        false
-      else
-        find_by_score(node.right, score)
-      end
+      find_by_score(score, node.right) unless node.right.nil?
     when -1
-      if node.left.nil?
-        false
-      else
-        find_by_score(node.left, score)
-      end
+      find_by_score(score, node.left) unless node.left.nil?
     when 0
       node
     end
   end
 
-
   def max
     max_node = find_max(anchor_node)
-    # max_node.as_hash
-    hash = { max_node.title => max_node.score }
+    max_node.as_hash
   end
 
   def min
     min_node = find_min(anchor_node)
-    # min_node.as_hash
-    hash = { min_node.title => min_node.score }
+    min_node.as_hash
   end
 
   def find_max(node)
@@ -173,17 +159,21 @@ class BinarySearchTree
     file = "#{path_to_file}#{filename}"
     self.number_of_movies_inserted = 0
     begin
-      File.readlines(file).each do |line|
-        score = find_score(line)
-        title = find_title(line)
-        insert_new_movies(score, title)
-      end
+      load_contents(file)
     rescue Errno::EISDIR
       return "No filename given.  Expecting a command of the form: `binary_search_tree.load('filename-here')`"
     rescue Errno::ENOENT
       return "File not present.  Please check your filename, #{filename}."
     else
       number_of_movies_inserted
+    end
+  end
+
+  def load_contents(file)
+    File.readlines(file).each do |line|
+      score = find_score(line)
+      title = find_title(line)
+      insert_new_movies(score, title)
     end
   end
 
@@ -203,18 +193,16 @@ class BinarySearchTree
   end
 
   def health(depth)
-    if anchor_node.nil?
-      []
-    else
-      self.size_of_tree = count_child_nodes(anchor_node)
-      self.nodes_at_depth = []
+    return [] if anchor_node.nil?
 
-      nodes = find_by_depth(anchor_node, depth)
-      present_nodes = []
-      node_statistics(nodes, present_nodes)
+    self.size_of_tree = count_child_nodes(anchor_node)
+    self.nodes_at_depth = []
 
-      return sort_statistics(present_nodes)
-    end
+    nodes = find_by_depth(anchor_node, depth)
+    present_nodes = []
+    node_statistics(nodes, present_nodes)
+
+    return sort_statistics(present_nodes)
   end
 
   def node_statistics(nodes, present_nodes)
@@ -278,7 +266,7 @@ class BinarySearchTree
       sort_children(nodes) if nodes
       return score
     end
-    node = find_by_score(anchor_node, score)
+    node = find_by_score(score)
     if node
       remove_child(anchor_node, node)
       return score
