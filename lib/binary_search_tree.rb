@@ -3,7 +3,7 @@ require_relative 'node'
 class BinarySearchTree
   attr_accessor :anchor_node,
                 :max_depth,
-                :sorted_array,
+                :sorted_nodes,
                 :number_of_movies_inserted,
                 :size_of_tree,
                 :nodes_at_depth,
@@ -12,7 +12,7 @@ class BinarySearchTree
   def initialize
     @anchor_node
     @max_depth
-    @sorted_array
+    @sorted_nodes
     @number_of_movies_inserted
     @size_of_tree
     @nodes_at_depth
@@ -61,10 +61,12 @@ class BinarySearchTree
   end
 
   def make_new_node(score, title, depth)
-    if depth > max_depth
-      self.max_depth = depth
-    end
+    update_max_depth(depth) if depth > max_depth
     Node.new(score, title, depth: depth)
+  end
+
+  def update_max_depth(depth)
+    self.max_depth = depth
   end
 
   def include?(score)
@@ -101,33 +103,31 @@ class BinarySearchTree
   end
 
   def find_max(node=anchor_node)
-    if node.right.nil?
-      return node
-    else
-      find_max(node.right)
-    end
+    return node if node.right.nil?
+    find_max(node.right)
   end
 
   def find_min(node=anchor_node)
-    if node.left.nil?
-      return node
-    else
-      find_min(node.left)
-    end
+    return node if node.left.nil?
+    find_min(node.left)
   end
 
   def sort
     if anchor_node.nil?
       []
     else
-      self.sorted_array = []
-      sorted_array << anchor_node
+      self.sorted_nodes = []
+      sorted_nodes << anchor_node
       collect_child_nodes(anchor_node, 0)
-      sorted_array.compact!
-      sorted_array.map! do |node|
-        node.as_hash
-      end
-      return sorted_array
+      format_contents
+      return sorted_nodes
+    end
+  end
+
+  def format_contents
+    sorted_nodes.compact!
+    sorted_nodes.map! do |node|
+      node.as_hash
     end
   end
 
@@ -137,21 +137,21 @@ class BinarySearchTree
       node,
       node.right
     ]
-    sorted_array[index] = insert_nodes
+    sorted_nodes[index] = insert_nodes
     compact_and_flatten
     if node.right
-      collect_child_nodes(node.right, sorted_array.index(node.right))
+      collect_child_nodes(node.right, sorted_nodes.index(node.right))
     end
     if node.left
-      collect_child_nodes(node.left, sorted_array.index(node.left))
+      collect_child_nodes(node.left, sorted_nodes.index(node.left))
     end
 
-    return sorted_array
+    return sorted_nodes
   end
 
   def compact_and_flatten
-    sorted_array.compact!
-    sorted_array.flatten!
+    sorted_nodes.compact!
+    sorted_nodes.flatten!
   end
 
   def load(filename)
@@ -234,8 +234,8 @@ class BinarySearchTree
   end
 
   def count_child_nodes(node)
-    self.sorted_array = []
-    sorted_array << node
+    self.sorted_nodes = []
+    sorted_nodes << node
     child_nodes = collect_child_nodes(node, 0)
     child_nodes.compact.length
   end
@@ -289,7 +289,7 @@ class BinarySearchTree
   end
 
   def save_the_children(node)
-    self.sorted_array = []
+    self.sorted_nodes = []
     nodes = collect_child_nodes(node, 0)
     nodes.compact!
     nodes.reject! { |n| n.score == node.score }
