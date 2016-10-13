@@ -91,16 +91,16 @@ class BinarySearchTree
   end
 
   def max
-    max_node = find_max(anchor_node)
+    max_node = find_max
     max_node.as_hash
   end
 
   def min
-    min_node = find_min(anchor_node)
+    min_node = find_min
     min_node.as_hash
   end
 
-  def find_max(node)
+  def find_max(node=anchor_node)
     if node.right.nil?
       return node
     else
@@ -108,7 +108,7 @@ class BinarySearchTree
     end
   end
 
-  def find_min(node)
+  def find_min(node=anchor_node)
     if node.left.nil?
       return node
     else
@@ -198,7 +198,7 @@ class BinarySearchTree
     self.size_of_tree = count_child_nodes(anchor_node)
     self.nodes_at_depth = []
 
-    nodes = find_by_depth(anchor_node, depth)
+    nodes = find_by_depth(depth)
     present_nodes = []
     node_statistics(nodes, present_nodes)
 
@@ -223,10 +223,10 @@ class BinarySearchTree
     end
   end
 
-  def find_by_depth(node, depth)
+  def find_by_depth(depth, node=anchor_node)
     if node.depth < depth
-      find_by_depth(node.right, depth) if node.right
-      find_by_depth(node.left, depth) if node.left
+      find_by_depth(depth, node.right) if node.right
+      find_by_depth(depth, node.left) if node.left
     elsif node.depth == depth
       nodes_at_depth << node
     end
@@ -243,14 +243,14 @@ class BinarySearchTree
   def leaves
     self.leaf_nodes = []
     if anchor_node
-      all_the_leaves = find_leaves(anchor_node)
+      all_the_leaves = find_leaves
       all_the_leaves.length
     else
       0
     end
   end
 
-  def find_leaves(node)
+  def find_leaves(node=anchor_node)
     if node.left.nil? && node.right.nil?
       leaf_nodes << node
     else
@@ -263,28 +263,28 @@ class BinarySearchTree
     if score == anchor_node.score
       nodes = save_the_children(anchor_node)
       self.anchor_node = nil
-      sort_children(nodes) if nodes
+      insert_children(nodes) if nodes
       return score
     end
     node = find_by_score(score)
     if node
-      remove_child(anchor_node, node)
+      remove_child(node)
       return score
     end
   end
 
-  def remove_child(parent_node, node)
+  def remove_child(node, parent_node=anchor_node)
     if parent_node.right == node
       nodes = save_the_children(node)
       remove_right_child(parent_node)
-      sort_children(nodes) if nodes
+      insert_children(nodes) if nodes
     elsif parent_node.left == node
       nodes = save_the_children(node)
       remove_left_child(parent_node)
-      sort_children(nodes) if nodes
+      insert_children(nodes) if nodes
     else 
-      remove_child(parent_node.right, node) if parent_node.right
-      remove_child(parent_node.left, node) if parent_node.left
+      remove_child(node, parent_node.right) if parent_node.right
+      remove_child(node, parent_node.left) if parent_node.left
     end
   end
 
@@ -296,7 +296,7 @@ class BinarySearchTree
     return nodes
   end
 
-  def sort_children(nodes)
+  def insert_children(nodes)
     nodes.shuffle!.shuffle!
     nodes.each do |node|
       self.insert(node.score, node.title)
