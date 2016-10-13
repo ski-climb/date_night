@@ -27,7 +27,7 @@ class BinarySearchTree
     end
   end
 
-  def insert(score:, title:)
+  def insert(score, title)
     if anchor_node.nil?
       make_anchor_node(score, title)
       return anchor_node.depth
@@ -39,7 +39,7 @@ class BinarySearchTree
 
   def make_anchor_node(score, title)
     self.max_depth = 0
-    self.anchor_node = Node.new(score: score, title: title, depth: 0)
+    self.anchor_node = Node.new(score, title, depth: 0)
   end
 
   def plinko_node_into_place(node, score, title)
@@ -67,7 +67,7 @@ class BinarySearchTree
     if depth > max_depth
       self.max_depth = depth
     end
-    Node.new(score: score, title: title, depth: depth)
+    Node.new(score, title, depth: depth)
   end
 
   def include?(score)
@@ -198,7 +198,7 @@ class BinarySearchTree
   def insert_new_movies(score, title)
     unless self.include?(score)
       self.number_of_movies_inserted += 1
-      self.insert(score: score, title: title)
+      self.insert(score, title)
     end
   end
 
@@ -311,7 +311,7 @@ class BinarySearchTree
   def sort_children(nodes)
     nodes.shuffle!.shuffle!
     nodes.each do |node|
-      self.insert(score: node.score, title: node.title)
+      self.insert(node.score, node.title)
     end
   end
 

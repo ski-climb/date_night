@@ -5,7 +5,7 @@ class Node
               :title,
               :depth
 
-  def initialize(score:, title:, depth:)
+  def initialize(score, title, depth:)
     @score = score
     @title = title
     @depth = depth

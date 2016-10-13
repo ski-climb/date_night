@@ -11,7 +11,7 @@ class BinarySearchTreeTest < Minitest::Test
   def setup
     @tree = BinarySearchTree.new
     refute @tree.anchor_node
-    @tree.insert(score: 50, title: "Anchor")
+    @tree.insert(50, "Anchor")
   end
 
   def test_anchor_node_is_the_first_entry
@@ -22,20 +22,20 @@ class BinarySearchTreeTest < Minitest::Test
   end
 
   def test_it_sorts_a_higher_score_to_the_right
-    @tree.insert(score: 70, title: "To the Right")
+    @tree.insert(70, "To the Right")
     assert_equal "To the Right", @tree.anchor_node.right.title
     assert_equal 1, @tree.anchor_node.right.depth
   end
 
   def test_it_sorts_a_lower_score_to_the_left
-    @tree.insert(score: 10, title: "To the Left")
+    @tree.insert(10, "To the Left")
     assert_equal "To the Left", @tree.anchor_node.left.title
     assert_equal 1, @tree.anchor_node.left.depth
   end
 
   def test_it_inserts_two_higher_scores_on_the_right
-    @tree.insert(score: 70, title: "To the Right")
-    @tree.insert(score: 90, title: "To the Right Right")
+    @tree.insert(70, "To the Right")
+    @tree.insert(90, "To the Right Right")
     assert_equal "To the Right", @tree.anchor_node.right.title
     assert_equal "To the Right Right", @tree.anchor_node.right.right.title
     assert_equal 2, @tree.anchor_node.right.right.depth
@@ -43,24 +43,24 @@ class BinarySearchTreeTest < Minitest::Test
   end
 
   def test_it_inserts_two_lower_scores_on_the_left
-    @tree.insert(score: 30, title: "To the Left")
-    @tree.insert(score: 10, title: "To the Left Left")
+    @tree.insert(30, "To the Left")
+    @tree.insert(10, "To the Left Left")
     assert_equal "To the Left", @tree.anchor_node.left.title
     assert_equal "To the Left Left", @tree.anchor_node.left.left.title
     assert_equal 2, @tree.anchor_node.left.left.depth
   end
 
   def test_it_does_not_insert_new_nodes_for_scores_which_alredy_exist
-    @tree.insert(score: 70, title: "To the Right")
+    @tree.insert(70, "To the Right")
     assert_equal "To the Right", @tree.anchor_node.right.title
-    @tree.insert(score: 70, title: "Duplicate Score")
+    @tree.insert(70, "Duplicate Score")
     assert_equal "To the Right", @tree.anchor_node.right.title
     refute_equal "Duplicate Score", @tree.anchor_node.right.title
   end
 
   def test_it_inserts_higher_and_lower_scores_properly
-    @tree.insert(score: 90, title: "To the Right")
-    @tree.insert(score: 80, title: "To the Right, then Left")
+    @tree.insert(90, "To the Right")
+    @tree.insert(80, "To the Right, then Left")
     assert_equal "To the Right", @tree.anchor_node.right.title
     assert_equal "To the Right, then Left", @tree.anchor_node.right.left.title
     assert_equal 2, @tree.anchor_node.right.left.depth
@@ -69,7 +69,7 @@ class BinarySearchTreeTest < Minitest::Test
   def test_the_binary_tree_can_sort_and_accommodate_many_movies
     scores = (1..1000).to_a.shuffle!
     scores.each do |score|
-      @tree.insert(score: score, title: "Just a Random Title")
+      @tree.insert(score, "Just a Random Title")
     end
     assert @tree.max_depth > 15
     assert @tree.include?(300)
@@ -89,7 +89,7 @@ class BinarySearchTreeTest < Minitest::Test
   def test_it_finds_sorted_movies_at_any_depth_in_tree_based_on_the_movie_score
     scores = (0..95).step(5).to_a
     scores.each do |score|
-      @tree.insert(score: score, title: "Just a Title")
+      @tree.insert(score, "Just a Title")
     end
     assert_equal true, @tree.include?(20)
     assert_equal true, @tree.include?(95)
@@ -99,8 +99,8 @@ class BinarySearchTreeTest < Minitest::Test
 
   def test_it_finds_the_depth_of_the_given_movie
     assert_equal 0, @tree.anchor_node.depth
-    @tree.insert(score: 14, title: "Depth of One")
-    @tree.insert(score: 44, title: "Depth of Two")
+    @tree.insert(14, "Depth of One")
+    @tree.insert(44, "Depth of Two")
     assert_equal 1, @tree.depth_of(14)
     assert_equal 2, @tree.depth_of(44)
   end
@@ -108,7 +108,7 @@ class BinarySearchTreeTest < Minitest::Test
   def test_it_finds_the_movie_with_the_highest_score
     scores = (5..95).step(5).to_a.shuffle!
     scores.each do |score|
-      @tree.insert(score: score, title: "Just a Title")
+      @tree.insert(score, "Just a Title")
     end
     assert_equal({ "Just a Title" => 95 }, @tree.max)
   end
@@ -116,7 +116,7 @@ class BinarySearchTreeTest < Minitest::Test
   def test_it_finds_the_movie_with_the_lowest_score
     scores = (5..95).step(5).to_a.shuffle!
     scores.each do |score|
-      @tree.insert(score: score, title: "Just a Title")
+      @tree.insert(score, "Just a Title")
     end
     assert_equal({ "Just a Title" => 5 }, @tree.min)
   end
@@ -133,7 +133,7 @@ class BinarySearchTreeTest < Minitest::Test
   end
 
   def test_it_sorts_a_tree_with_two_elements
-    @tree.insert(score: 90, title: "A Second Movie")
+    @tree.insert(90, "A Second Movie")
     assert_equal 1, @tree.max_depth
     sorted_array = [
       { "Anchor" => 50 },
@@ -145,7 +145,7 @@ class BinarySearchTreeTest < Minitest::Test
   def test_it_sorts_a_tree_with_10_elements
     scores = (11..99).step(11).to_a.shuffle!
     scores.each do |score|
-      @tree.insert(score: score, title: "Test Title")
+      @tree.insert(score, "Test Title")
     end
     sorted_array = [
       { "Test Title" => 11 },
@@ -182,7 +182,7 @@ class BinarySearchTreeTest < Minitest::Test
   end
 
   def test_it_does_not_insert_a_loaded_movie_to_tree_when_score_already_exists
-    @tree.insert(score: 75, title: 'French Dirty')
+    @tree.insert(75, 'French Dirty')
     assert @tree.include?(75)
     assert_equal 2, @tree.sort.length
     assert_equal 97, @tree.load('movies.txt')
@@ -199,21 +199,21 @@ class BinarySearchTreeTest < Minitest::Test
   end
 
   def test_it_returns_the_health_of_a_tree_with_three_movies
-    @tree.insert(score: 70, title: "Cat in the Hat")
-    @tree.insert(score: 30, title: "Modest Mouse")
+    @tree.insert(70, "Cat in the Hat")
+    @tree.insert(30, "Modest Mouse")
     assert_equal [[50, 3, 100]], @tree.health(0)
     assert_equal [[70, 1, 33], [30, 1, 33]], @tree.health(1)
   end
 
   def test_it_returns_the_health_of_a_tree_with_7_elements
     @healthy_tree = BinarySearchTree.new
-    @healthy_tree.insert(score: 98, title: "Animals United")
-    @healthy_tree.insert(score: 58, title: "Armageddon")
-    @healthy_tree.insert(score: 36, title: "Bill & Ted's Bogus Journey")
-    @healthy_tree.insert(score: 93, title: "Bill & Ted's Excellent Adventure")
-    @healthy_tree.insert(score: 86, title: "Charlie's Angels")
-    @healthy_tree.insert(score: 38, title: "Charlie's Country")
-    @healthy_tree.insert(score: 69, title: "Collateral Damage")
+    @healthy_tree.insert(98, "Animals United")
+    @healthy_tree.insert(58, "Armageddon")
+    @healthy_tree.insert(36, "Bill & Ted's Bogus Journey")
+    @healthy_tree.insert(93, "Bill & Ted's Excellent Adventure")
+    @healthy_tree.insert(86, "Charlie's Angels")
+    @healthy_tree.insert(38, "Charlie's Country")
+    @healthy_tree.insert(69, "Collateral Damage")
     assert_equal [[98, 7, 100]], @healthy_tree.health(0)
     assert_equal [[58, 6, 85]], @healthy_tree.health(1)
     assert_equal [[36, 2, 28], [93, 3, 42]], @healthy_tree.health(2)
@@ -230,10 +230,10 @@ class BinarySearchTreeTest < Minitest::Test
 
   def test_a_tree_knows_its_height
     @tall_tree = BinarySearchTree.new
-    @tall_tree.insert(score: 61, title: "Bill & Ted's Excellent Adventure")
-    @tall_tree.insert(score: 16, title: "Johnny English")
-    @tall_tree.insert(score: 92, title: "Sharknado 3")
-    @tall_tree.insert(score: 50, title: "Hannibal Buress: Animal Furnace")
+    @tall_tree.insert(61, "Bill & Ted's Excellent Adventure")
+    @tall_tree.insert(16, "Johnny English")
+    @tall_tree.insert(92, "Sharknado 3")
+    @tall_tree.insert(50, "Hannibal Buress: Animal Furnace")
     assert_equal 3, @tall_tree.height
   end
 
@@ -247,30 +247,30 @@ class BinarySearchTreeTest < Minitest::Test
   end
 
   def test_a_tree_with_two_movies_has_two_leaves
-    @tree.insert(score: 100, title: "Second node")
+    @tree.insert(100, "Second node")
     assert_equal 1, @tree.leaves
   end
 
   def test_a_tree_with_only_right_nodes_has_only_one_leaf
-    @tree.insert(score: 60, title: "To the right only")
-    @tree.insert(score: 70, title: "To the right only")
-    @tree.insert(score: 80, title: "To the right only")
-    @tree.insert(score: 90, title: "To the right only")
+    @tree.insert(60, "To the right only")
+    @tree.insert(70, "To the right only")
+    @tree.insert(80, "To the right only")
+    @tree.insert(90, "To the right only")
     assert_equal 1, @tree.leaves
   end
 
   def test_a_tree_with_one_node_on_either_side_of_the_anchor_has_two_leaves
-    @tree.insert(score: 10, title: "To the Left")
-    @tree.insert(score: 100, title: "To the Right")
+    @tree.insert(10, "To the Left")
+    @tree.insert(100, "To the Right")
     assert_equal 2, @tree.leaves
   end
 
   def test_a_tree_with_bunch_of_nodes_has_many_leaves
     @tall_tree = BinarySearchTree.new
-    @tall_tree.insert(score: 61, title: "Bill & Ted's Excellent Adventure")
-    @tall_tree.insert(score: 16, title: "Johnny English")
-    @tall_tree.insert(score: 92, title: "Sharknado 3")
-    @tall_tree.insert(score: 50, title: "Hannibal Buress: Animal Furnace")
+    @tall_tree.insert(61, "Bill & Ted's Excellent Adventure")
+    @tall_tree.insert(16, "Johnny English")
+    @tall_tree.insert(92, "Sharknado 3")
+    @tall_tree.insert(50, "Hannibal Buress: Animal Furnace")
     assert_equal 2, @tall_tree.leaves
   end
 
@@ -279,14 +279,14 @@ class BinarySearchTreeTest < Minitest::Test
   end
 
   def test_deleting_a_node_returns_the_score_for_the_deleted_node
-    @tree.insert(score: 100, title: "I'm a leaf!")
+    @tree.insert(100, "I'm a leaf!")
     assert @tree.include?(100)
     assert_equal 100, @tree.delete(100)
     refute @tree.include?(100)
   end
 
   def test_deleting_a_leaf_removes_that_node_only
-    @tree.insert(score: 100, title: "I'm a leaf!")
+    @tree.insert(100, "I'm a leaf!")
     assert @tree.include?(100)
     assert_equal 100, @tree.delete(100)
     refute @tree.include?(100)
@@ -294,16 +294,16 @@ class BinarySearchTreeTest < Minitest::Test
   end
 
   def test_deleting_a_deeper_leaf_node_returns_the_score_of_the_deleted_leaf
-    @tree.insert(score: 70, title: "To the Right")
-    @tree.insert(score: 90, title: "To the Right Right")
-    @tree.insert(score: 110, title: "To the Right Right Right")
+    @tree.insert(70, "To the Right")
+    @tree.insert(90, "To the Right Right")
+    @tree.insert(110, "To the Right Right Right")
     assert_equal 110, @tree.delete(110)
     refute @tree.include?(110)
   end
 
   def test_deleting_a_node_with_one_child_leaf_sorts_that_child_into_the_tree
-    @tree.insert(score: 70, title: "To the Right")
-    @tree.insert(score: 90, title: "To the Right Right")
+    @tree.insert(70, "To the Right")
+    @tree.insert(90, "To the Right Right")
     assert @tree.include?(50)
     assert @tree.include?(70)
     assert @tree.include?(90)
@@ -318,13 +318,13 @@ class BinarySearchTreeTest < Minitest::Test
   end
 
   def test_deleting_a_node_in_a_larger_tree_repopulates_tree_with_children_of_deleted_node
-    @tree.insert(score: 98, title: "Animals United")
-    @tree.insert(score: 58, title: "Armageddon")
-    @tree.insert(score: 36, title: "Bill & Ted's Bogus Journey")
-    @tree.insert(score: 93, title: "Bill & Ted's Excellent Adventure")
-    @tree.insert(score: 86, title: "Charlie's Angels")
-    @tree.insert(score: 38, title: "Charlie's Country")
-    @tree.insert(score: 69, title: "Collateral Damage")
+    @tree.insert(98, "Animals United")
+    @tree.insert(58, "Armageddon")
+    @tree.insert(36, "Bill & Ted's Bogus Journey")
+    @tree.insert(93, "Bill & Ted's Excellent Adventure")
+    @tree.insert(86, "Charlie's Angels")
+    @tree.insert(38, "Charlie's Country")
+    @tree.insert(69, "Collateral Damage")
     assert_equal 98, @tree.delete(98)
     assert @tree.include?(58)
     assert @tree.include?(93)
@@ -333,13 +333,13 @@ class BinarySearchTreeTest < Minitest::Test
   end
 
   def test_deleting_the_anchor_node_sorts_the_entire_tree_again
-    @tree.insert(score: 98, title: "Animals United")
-    @tree.insert(score: 58, title: "Armageddon")
-    @tree.insert(score: 36, title: "Bill & Ted's Bogus Journey")
-    @tree.insert(score: 93, title: "Bill & Ted's Excellent Adventure")
-    @tree.insert(score: 86, title: "Charlie's Angels")
-    @tree.insert(score: 38, title: "Charlie's Country")
-    @tree.insert(score: 69, title: "Collateral Damage")
+    @tree.insert(98, "Animals United")
+    @tree.insert(58, "Armageddon")
+    @tree.insert(36, "Bill & Ted's Bogus Journey")
+    @tree.insert(93, "Bill & Ted's Excellent Adventure")
+    @tree.insert(86, "Charlie's Angels")
+    @tree.insert(38, "Charlie's Country")
+    @tree.insert(69, "Collateral Damage")
     assert_equal 50, @tree.delete(50)
     refute @tree.include?(50)
     assert @tree.include?(98)
