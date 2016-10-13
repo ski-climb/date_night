@@ -1,7 +1,7 @@
 gem 'minitest', '~> 5.9'
 require 'minitest/autorun'
 require 'minitest/pride'
-require_relative '../lib/node'
+require './lib/node'
 
 class NodeTest < Minitest::Test
 

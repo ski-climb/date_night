@@ -1,8 +1,8 @@
 gem 'minitest', '~> 5.9'
 require 'minitest/autorun'
 require 'minitest/pride'
-require_relative '../lib/node'
-require_relative '../lib/binary_search_tree'
+require './lib/node'
+require './lib/binary_search_tree'
 
 require 'pry'
 
