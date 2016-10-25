@@ -9,16 +9,6 @@ class BinarySearchTree
                 :nodes_at_depth,
                 :leaf_nodes
 
-  def initialize
-    @anchor_node
-    @max_depth
-    @sorted_nodes
-    @number_of_movies_inserted
-    @size_of_tree
-    @nodes_at_depth
-    @leaf_nodes
-  end
-
   def height
     return max_depth + 1 unless anchor_node.nil?
     0
